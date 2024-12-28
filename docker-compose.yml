@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    restart: unless-stopped
+    # If you need to expose any ports, uncomment and modify the following lines
+    # ports:
+    #   - "8000:8000" 
