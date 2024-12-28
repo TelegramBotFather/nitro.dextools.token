@@ -33,10 +33,10 @@ class Bot(Client):
         self.owner: Optional[types.User] = None
         self.username: Optional[str] = None
 
-    async def start(self):
+    async def start(self, *args, **kwargs):
         """Initialize and start the bot."""
         try:
-            await super().start()
+            await super().start(*args, **kwargs)
             me = await self.get_me()
             self.owner = await self.get_users(int(Config.OWNER_ID))
             self.username = f"@{me.username}"
@@ -161,4 +161,4 @@ class Bot(Client):
     async def stop(self, *args: Any, **kwargs: Any) -> None:
         """Stop the bot and clean up resources."""
         logger.info("Stopping bot...")
-        await super().stop()
+        await super().stop(*args, **kwargs)
