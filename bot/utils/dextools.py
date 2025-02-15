@@ -43,8 +43,8 @@ class DexToolsAPI:
             params=params,
             proxy=self.proxy if self.proxy else None  # Use proxy if set
         ) as response:
-            response.raise_for_status()
             logging.info(await response.text())
+            response.raise_for_status()
             return await response.json()
 
     async def get_token_race(self, lite: bool = False) -> Dict:
