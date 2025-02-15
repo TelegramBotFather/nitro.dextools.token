@@ -7,7 +7,7 @@ if __name__ == "__main__":
     app = Bot()
     sc = AsyncIOScheduler()
 
-    seconds = 1
+    seconds = 10
 
     sc.add_job(
         process_new_pairs,
