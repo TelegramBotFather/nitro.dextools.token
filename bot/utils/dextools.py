@@ -1,7 +1,7 @@
 import aiohttp
 import asyncio
 from typing import Dict, Optional
-
+import logging
 
 class DexToolsAPI:
     BASE_URL = "https://core-api.dextools.io"
@@ -44,6 +44,7 @@ class DexToolsAPI:
             proxy=self.proxy if self.proxy else None  # Use proxy if set
         ) as response:
             response.raise_for_status()
+            logging.info(await response.text())
             return await response.json()
 
     async def get_token_race(self, lite: bool = False) -> Dict:
