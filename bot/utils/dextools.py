@@ -6,7 +6,7 @@ from typing import Dict, Optional
 class DexToolsAPI:
     BASE_URL = "https://core-api.dextools.io"
     
-    def __init__(self):
+    def __init__(self, proxy: str = "http://wackskbv-rotate:rt92pbo1c3js@p.webshare.io:80/"):
         self.headers = {
             'Content-Type': 'application/json',
             'Accept': 'application/json', 
@@ -22,6 +22,7 @@ class DexToolsAPI:
             'Priority': 'u=3, i',
             'X-API-Version': '1'
         }
+        self.proxy = proxy
         self.session: Optional[aiohttp.ClientSession] = None
 
     async def __aenter__(self):
@@ -33,13 +34,14 @@ class DexToolsAPI:
             await self.session.close()
 
     async def _make_request(self, endpoint: str, params: Dict = None) -> Dict:
-        """Make an async HTTP request to the DexTools API"""
+        """Make an async HTTP request to the DexTools API with proxy support"""
         if not self.session:
             raise RuntimeError("API client not initialized. Use 'async with' context manager.")
             
         async with self.session.get(
             f"{self.BASE_URL}{endpoint}",
-            params=params
+            params=params,
+            proxy=self.proxy if self.proxy else None  # Use proxy if set
         ) as response:
             response.raise_for_status()
             return await response.json()
@@ -58,15 +60,16 @@ class DexToolsAPI:
         return await self._make_request("/pool/listing/token-race", params)
 
 
-async def get_token_race(lite: bool = False) -> Dict:
+async def get_token_race(lite: bool = False, proxy: str = "") -> Dict:
     """
     Convenience function to get token race data without managing context
     
     Args:
         lite (bool): Whether to return lite version of data
+        proxy (str): Proxy URL if needed
         
     Returns:
         Dict: Token race data
     """
-    async with DexToolsAPI() as api:
+    async with DexToolsAPI(proxy) as api:
         return await api.get_token_race(lite)
